@@ -26,6 +26,21 @@ namespace BSwD_Week_1
             }
         }
 
+        /// <summary>
+        /// Loads from a text file.
+        /// </summary>
+        /// <param name="path">Path to the text file.</param>
+        public Cage(string path)
+        {
+            string[] lines = File.ReadAllLines(path);
+            numberOfAnimals = lines.Length;
+            animals = new Animal[numberOfAnimals];
+            for (int i = 0;i < animals.Length;i++)
+            {
+                animals[i] = new Animal(lines[i]);
+            }
+        }
+
         public void Add(Animal animal)
         {
             animals[numberOfAnimals++] = animal;

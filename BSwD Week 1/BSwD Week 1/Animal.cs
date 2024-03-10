@@ -35,6 +35,19 @@ namespace BSwD_Week_1
             }
         }
 
+        /// <summary>
+        /// Creates an animal from semicolon separated properties.
+        /// </summary>
+        /// <param name="description">Descriptionf of the animal's attribute separated by semicolons.</param>
+        public Animal(string description)
+        {
+            string[] attributes = description.Split(';');
+            name = attributes[0];
+            predator = Convert.ToBoolean(int.Parse(attributes[1]));
+            weight = int.Parse(attributes[2]);
+            species = (Species) Enum.Parse(typeof(Species), attributes[3]);
+        }
+
         public Animal(string name, bool predator, int weight, Species species)
         {
             this.name = name;

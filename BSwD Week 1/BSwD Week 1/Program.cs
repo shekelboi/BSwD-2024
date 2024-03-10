@@ -67,6 +67,16 @@ namespace BSwD_Week_1
             Console.WriteLine("Which cage has the highest number of species in it?");
             Console.WriteLine("This cage:");
             Console.WriteLine(Cage.CageWithMostAnimals(cages));
+
+            // Task 7
+            Console.Write("List the animals in a certain cage: ");
+            int cageNumber = int.Parse(Console.ReadLine());
+            Console.WriteLine(cages[cageNumber - 1]);
+
+            // Task 8
+            Console.WriteLine("Loading a cage from a text file");
+            string text = File.ReadAllText("input.txt");
+            Console.WriteLine(new Cage("input.txt"));
         }
     }
 }
