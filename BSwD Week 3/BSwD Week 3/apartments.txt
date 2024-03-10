@@ -1,0 +1,3 @@
+RentalApartment 50.2 5 30000000
+FamilyApartment 62.8 2 40000000
+Garage 10.3 5000000 heated
