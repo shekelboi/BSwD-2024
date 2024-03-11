@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BSwD_Week_3
 {
-    abstract class Flat : IRealEstate
+    abstract class Flat : IRealEstate, IComparable
     {
         protected double area;
         protected int roomsCount;
@@ -33,6 +33,19 @@ namespace BSwD_Week_3
         }
 
         public abstract bool MoveIn(int newResidents);
+
+        public int CompareTo(object? obj)
+        {
+            if (obj != null && (obj.GetType() == typeof(Flat) || obj.GetType().IsSubclassOf(typeof(Flat))))
+            {
+                Flat flat = (Flat)obj;
+                double difference = this.area - flat.area;
+                // If the difference is less than 0, round it down, otherwise round it up
+                return Convert.ToInt32(difference < 0 ? Math.Floor(difference) : Math.Ceiling(difference));
+            }
+            return -1;
+        }
+
         public int ResidentsCount { get => residentsCount; }
     }
 }
