@@ -1,5 +1,6 @@
 ﻿using Database;
 using System.ComponentModel.Design.Serialization;
+using System.Linq;
 using System.Xml.Linq;
 internal class Program
 {
@@ -78,5 +79,39 @@ internal class Program
         query.ToList().ForEach(m => Console.WriteLine($"{m.Title}"));
         #endregion
 
+        #region 3. Complex LINQ Queries
+        Console.WriteLine("3. Complex LINQ Queries");
+
+        Console.WriteLine("Genres with their average ratings:");
+        var genreRatingQuery = from m in dbContext.Movies
+                               group m by m.Genre into g
+                               select new { Genre = g.Key, Average = g.Average(mov => mov.Rating) };
+        genreRatingQuery.ToList().ForEach(m => Console.WriteLine($"{m.Genre}: {m.Average}"));
+
+        Console.WriteLine("Movies between 1990 and 1999 with higher rating than 8.0:");
+        query = from m in dbContext.Movies
+                where m.ReleaseYear >= 1990 && m.ReleaseYear <= 1999 && m.Rating > 8.0
+                select m;
+        query.ToList().ForEach(m => Console.WriteLine($"{m.Title} ({m.ReleaseYear}): {m.Rating}"));
+
+        Console.WriteLine("Movies with King in their names with a rating above 8.5:");
+        query = from m in dbContext.Movies
+                where m.Title.Contains("King") && m.Rating > 8.5
+                select m;
+        query.ToList().ForEach(m => Console.WriteLine($"{m.Title}: {m.Rating}"));
+
+        Console.WriteLine("Top 5 by genre:");
+        var topFiveQuery = from m in dbContext.Movies
+                           group m by m.Genre into g
+                           select new { Genre = g.Key, Movies = g.OrderByDescending(mov => mov.Rating).Take(5).ToList() };
+        topFiveQuery.ToList().ForEach(m => Console.WriteLine($"{m.Genre}: {string.Join(", ", m.Movies.Select(mov => mov.Title))}"));
+        
+        double averageRating = dbContext.Movies.Average(m => m.Rating);
+        Console.WriteLine($"Movies by Christopher Nolan that have higher rating than average ({averageRating}):");
+        query = from m in dbContext.Movies
+                where m.Director == "Christopher Nolan" && m.Rating > averageRating
+                select m;
+        query.ToList().ForEach(m => Console.WriteLine($"{m.Title}: {m.Rating}"));
+        #endregion
     }
 }
