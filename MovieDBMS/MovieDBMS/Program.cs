@@ -17,7 +17,8 @@ internal class Program
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         MovieRepository movieRepository = new MovieRepository();
-        movieRepository.AddRange(Movie.ReadFromXml("LargeMovieData.xml"));
+        MovieData movieData = MovieData.Load("LargeMovieData.xml");
+        movieRepository.AddRange(movieData.Movies);
         MoviesLoaded.Invoke(new Program(), new EventArgs());
 
         #region 1. Simple LINQ Queries
