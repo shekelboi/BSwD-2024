@@ -18,9 +18,9 @@ internal class Program
         Database.MovieDbContext dbContext = new Database.MovieDbContext();
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
-        MovieRepository movieRepository = new MovieRepository();
         MovieData movieData = MovieData.Load("LargeMovieData.xml");
-        movieRepository.AddRange(movieData.Movies);
+        dbContext.Movies.AddRange(movieData.Movies);
+        dbContext.SaveChanges();
         MoviesLoaded.Invoke(new Program(), new EventArgs());
 
         var options = new JsonSerializerOptions
