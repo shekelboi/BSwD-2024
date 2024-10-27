@@ -1,16 +1,24 @@
 ﻿using Database;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+
+public delegate void MovieDataLoadedEventHandler(object sender, EventArgs e);
+
 internal class Program
 {
+    public static event MovieDataLoadedEventHandler? MoviesLoaded;
+
     private static void Main(string[] args)
     {
+        MoviesLoaded += MovieDataLoadedEventHandler;
         Database.MovieDbContext dbContext = new Database.MovieDbContext();
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         MovieRepository movieRepository = new MovieRepository();
         movieRepository.AddRange(Movie.ReadFromXml("LargeMovieData.xml"));
+        MoviesLoaded.Invoke(new Program(), new EventArgs());
 
         #region 1. Simple LINQ Queries
         Console.WriteLine("1. Simple LINQ Queries");
@@ -113,5 +121,10 @@ internal class Program
                 select m;
         query.ToList().ForEach(m => Console.WriteLine($"{m.Title}: {m.Rating}"));
         #endregion
+    }
+
+    private static void MovieDataLoadedEventHandler(object sender, EventArgs e)
+    {
+        Console.WriteLine("Successfully loaded the data about movies.");
     }
 }
